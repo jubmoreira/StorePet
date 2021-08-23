@@ -25,7 +25,7 @@ public class Pet {
     }
 
     //Incluir - Create - Post
-    @Test //Identifica  o método ou função com um teste para o TestNG
+    @Test(priority = 1) //Identifica  o método ou função com um teste para o TestNG
     public void incluirPet() throws IOException {
         String jsonBody = lerJson("db/pet1.json");
 
@@ -36,7 +36,7 @@ public class Pet {
         given()// Dado
                 .contentType("application/json") //Comum em API REST - antigas eram "txt/xml"
                 .log().all()
-                .body(jsonBody)
+                .body(jsonBody)//inclui
         .when()
                 .post(uri)
         .then()
@@ -44,9 +44,31 @@ public class Pet {
                 .statusCode(200)
                 .body("name",is("Atena"))
                 .body("status",is("available"))
-                .body("category.name", is("dog"))
-                .body("tags.name",contains("sta"))
+                .body("category.name", is("AX2345LORT"))
+                .body("tags.name",contains("data"))
         ;
     }
+    @Test(priority = 2)
+    public void consultarPet(){
+        String petId = "1986021135";
 
+        String token =
+
+        given()
+                .contentType("application/json")
+                .log().all()
+        .when()
+                .get(uri + "/" + petId)
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", is("Atena"))
+                .body("category.name", is("AX2345LORT"))
+                .body("status", is("available"))
+        .extract()
+                .path("category.name")
+        ;
+        System.out.println("O token é " + token);
+
+    }
 }
