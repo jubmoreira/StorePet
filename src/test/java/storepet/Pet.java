@@ -71,4 +71,41 @@ public class Pet {
         System.out.println("O token é " + token);
 
     }
+    @Test(priority = 3)
+    public void alterarPet()throws IOException{
+        String jsonBody = lerJson("db/pet1.json");
+
+        given()// Dado
+                .contentType("application/json") //Comum em API REST - antigas eram "txt/xml"
+                .log().all()
+                .body(jsonBody)
+
+        .when()
+                .put(uri)//altera
+
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", is("Atena"))
+                .body("status", is("sold"))
+        ;
+    }
+    @Test
+    public void excluirPet(){
+        String petId = "1986021135";
+
+        given()// Dado
+                .contentType("application/json") //Comum em API REST - antigas eram "txt/xml"
+                .log().all()
+        .when()
+                .delete(uri + "/" + petId)
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("code", is(200))
+                .body("type", is("unknown"))
+                .body("message", is(petId))
+
+        ;
+    }
 }
